@@ -13,6 +13,9 @@ class GPS_Parse
         short int buff_count;
         char gps_buff[255];
         char *RX;
+        uint16_t payloadLen;
         uint8_t readnum;
+        uint8_t CK_A;
+        uint8_t CK_B;
 };
 
