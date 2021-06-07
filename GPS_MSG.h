@@ -1,4 +1,5 @@
 #pragma once
+#include "Arduino.h"
 const char ubexheader []={0xB5, 0x62};
 const char ubexecefmesg []={0x01, 0x01};
 const char ubexnacmesg []={0x01, 0x02};
@@ -14,7 +15,7 @@ struct ubexECEF
     unsigned int pAcc; //u4
 };
 
-struct ubexNAV
+struct ubexNAVSOL
 {
     unsigned int itow; // U4
     int ftow;
@@ -35,4 +36,40 @@ struct ubexNAV
     unsigned int resrved2; //u4
 };
 
+struct ubexNAVPVT
+{
+    uint32_t itow;
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+    char valid;
+    uint32_t tAcc;
+    int32_t nano;
+    uint8_t fixType;
+    char flags;
+    char flags2;
+    uint8_t numSV;
+    int32_t lon;
+    int32_t lat;
+    int32_t height;
+    int32_t hMSL;
+    uint32_t hAcc;
+    uint32_t vAcc;
+    int32_t velN;
+    int32_t velE;
+    int32_t velD;
+    int32_t gSpeed;
+    int32_t headMot;
+    uint32_t sAcc;
+    uint32_t headAcc;
+    uint16_t pDOP;
+    char flags3;
+    uint8_t reserved1;
+    int32_t headVeh;
+    int16_t magDec;
+    uint16_t magAcc;    
+};
 
