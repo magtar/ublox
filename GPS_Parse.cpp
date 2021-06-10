@@ -1,5 +1,6 @@
 #include "GPS_Parse.h"
 
+
 GPS_Parse::GPS_Parse(char *rxbuffer)
 {
     RX=rxbuffer;
@@ -36,7 +37,8 @@ void GPS_Parse::getc()
         memcpy(&gps_buff[buff_count],RX,1);
         memcpy(&payloadLen,&gps_buff[buff_count-1],2);        
         readnum=payloadLen+2;        
-        buff_count++;        
+        buff_count++;   
+        //Serial.print(readnum);     
     }
     else if(buff_count>5&&readnum!=0)
     {        
@@ -45,12 +47,14 @@ void GPS_Parse::getc()
         buff_count++;        
         if(readnum==0)
         {
+             checksum(); 
             header_found=false;
             buff_count=0;
             readnum=0;
             payloadLen=0;
+           
             memset(&gps_buff,0,sizeof(gps_buff));
-            checksum(); 
+            
         }
     }    
     else 
@@ -64,13 +68,25 @@ void GPS_Parse::getc()
 
 }
 
-bool GPS_Parse::checksum()
+void GPS_Parse::checksum()
 {
     CK_A=0;
     CK_B=0;
-//     for (int i=0;i<N;i++)
-//     {
-//         CK_A=CK_A+buffer[i];
-//         CK_B=CK_B+CK_A;
-//     }
+    uint16_t N=payloadLen+6;
+    //uint16_t N=payloadLen+1;
+    for (uint16_t i=2;i<N;i++)
+    {
+        CK_A=CK_A+gps_buff[i];
+        CK_B=CK_B+CK_A;       
+    }
+    if (CK_A==gps_buff[payloadLen+6] && CK_B==gps_buff[payloadLen+7])
+    {
+        Serial.print("yes");
+    }
+    else
+    {     
+        char buff[20];
+        sprintf(buff,"%d,%d,%d,%d\n ",CK_A,gps_buff[payloadLen+6],CK_B,gps_buff[payloadLen+7]);
+        Serial.print(buff);
+    }
 }
